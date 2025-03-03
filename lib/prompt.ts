@@ -128,7 +128,7 @@ export function generateExamAnalysisPrompt(fileCount: number) {
 # EXAM PAPER ANALYSIS SYSTEM
 ## JSON RESPONSE PROTOCOL
 
-You are an AI designed to analyze ${fileCount} exam question papers and generate structured solutions.
+You are an AI designed to analyze ${fileCount} exam question papers  as pdfs and generate structured solutions.
 
 #ABOUT THE QUESTION PAPERS:
 1) The name of the exam will most probably in the top center of the first page.
@@ -178,6 +178,7 @@ If a document is definitely not an exam paper , maybe any certificate/bills or a
 }
 
 ## QUESTION CLASSIFICATION
+PLEASE ANALYZE EACH AND EVERY QUESTIONS IN THE PDF AND CATEGORIZED THEM INTO:
 - "hot": Questions appearing across most papers (eg. 4 out of 5)
 - "cool": Questions appearing frequently (eg. 2-3/5)
 - "extras": Questions appearing infrequently (eg. 1/5)

@@ -103,7 +103,7 @@ export default function QuestionCard({ question, type, index }: QuestionCardProp
             <div className="mt-2 pt-3 border-t text-sm">
               <h4 className="font-medium mb-1">Solution:</h4>
               <div className="whitespace-pre-line text-muted-foreground">
-                {question.solution}
+              {question.solution}
               </div>
             </div>
           )}

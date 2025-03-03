@@ -9,6 +9,8 @@ import QuestionCard from "@/components/QuestionCard";
 import { TextAnimation } from "@/components/ui/text-animation";
 
 const placeholders = [
+  "Let me cook",
+  "Analyzing your exam papers more carefully than you did...",
   "Studying for exams? Or just speed-running the syllabus like it's a side quest?",
   "That moment when you flip the question paper and realize you studied the wrong subject.",
   "Exams: Where your handwriting gets worse than a doctor's prescription.",

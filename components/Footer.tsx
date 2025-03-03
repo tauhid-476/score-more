@@ -1,5 +1,6 @@
 
 import { Twitter, Github } from "lucide-react";
+import Link from "next/link";
 
 export default function Footer() {
   return (
@@ -14,7 +15,7 @@ export default function Footer() {
               An AI-powered exam preparation assistant that helps students identify important questions, categorize topics, and provide solutions.
             </p>
           </div>
-          
+
           <div>
             <h4 className="font-semibold text-lg mb-4">Product</h4>
             <ul className="space-y-3">
@@ -35,38 +36,39 @@ export default function Footer() {
               </li>
             </ul>
           </div>
-          
+
           <div>
             <h4 className="font-semibold text-lg mb-4">Connect</h4>
             <div className="flex space-x-4 mb-4">
-              <a
-                href="https://twitter.com"
+
+              <Link
+                href="https://x.com/tauhid_khan476"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="w-10 h-10 rounded-full bg-background flex items-center justify-center border border-border hover:border-primary/50 hover:bg-primary/5 transition-colors"
                 aria-label="Twitter"
               >
                 <Twitter className="w-5 h-5" />
-              </a>
-              <a
-                href="https://github.com"
+              </Link>
+              <Link
+                href="https://github.com/tauhid-476"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="w-10 h-10 rounded-full bg-background flex items-center justify-center border border-border hover:border-primary/50 hover:bg-primary/5 transition-colors"
                 aria-label="GitHub"
               >
                 <Github className="w-5 h-5" />
-              </a>
+              </Link>
             </div>
             <a
-              href="mailto:contact@scoremore.ai"
+              href="mailto:tauheedxd90@gmail.com"
               className="text-muted-foreground hover:text-foreground transition-colors"
             >
-              contact@scoremore.ai
+              tauheedxd90@gmail.com
             </a>
           </div>
         </div>
-        
+
         <div className="mt-16 pt-8 border-t border-border/30 flex flex-col md:flex-row justify-between items-center gap-4">
           <p className="text-sm text-muted-foreground">
             © {new Date().getFullYear()} SCORE MORE. All rights reserved.
