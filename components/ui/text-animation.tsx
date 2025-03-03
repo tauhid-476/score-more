@@ -9,7 +9,7 @@ export function TextAnimation({ texts }: { texts: string[] }) {
   useEffect(() => {
     const intervalId = setInterval(() => {
       setCurrentTextIndex((prev) => (prev + 1) % texts.length);
-    }, 3000);
+    }, 5000);
 
     return () => clearInterval(intervalId);
   }, [texts]);
