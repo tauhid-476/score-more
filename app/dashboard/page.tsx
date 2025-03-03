@@ -1,5 +1,5 @@
 "use client";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { toast } from "sonner";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -21,12 +21,9 @@ export default function Dashboard() {
   const [loading, setLoading] = useState(false);
   const [data, setData] = useState<ExamAnalysisResponse | null>(null);
   const [error, setError] = useState<ExamAnalysisError | null>(null);
-  const [isDisabled, setIsDisabled] = useState(false);
 
   const handleFilesUploaded = async (files: File[]) => {
     if (!files.length) return;
-    if (files.length <= 1) setIsDisabled(true);
-
     setLoading(true);
     setError(null);
     setData(null);
