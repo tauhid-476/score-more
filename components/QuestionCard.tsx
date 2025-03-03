@@ -27,7 +27,7 @@ export default function QuestionCard({ question, type, index }: QuestionCardProp
       case "hot":
         return "border-l-4 border-l-destructive";
       case "cool":
-        return "border-l-4 border-l-primary";
+        return "border-l-4 border-l-[#192cc2]";
       case "extra":
         return "border-l-4 border-l-[#b6de3f]";
       default:
@@ -66,7 +66,7 @@ export default function QuestionCard({ question, type, index }: QuestionCardProp
             <div className="flex-1">
               <p className="font-medium">{question.question}</p>
               <div className="flex flex-wrap gap-2 mt-2">
-                {/* TODO:{question.marks && (
+                {/* {question.marks && (
                   <Badge variant="outline" className="bg-background/50">
                     {question.marks} marks
                   </Badge>
@@ -76,7 +76,7 @@ export default function QuestionCard({ question, type, index }: QuestionCardProp
                   className={cn(
                     "bg-background/50",
                     type === "hot" && "border-destructive text-destructive",
-                    type === "cool" && "border-primary text-primary",
+                    type === "cool" && "border-[#192cc2] text-[#192cc2]",
                     type === "extra" && "border-muted-foreground text-muted-foreground"
                   )}
                 >

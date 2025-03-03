@@ -158,7 +158,7 @@ You are an AI designed to analyze ${fileCount} exam question papers and generate
 - Use contextual clues to determine if a document is an exam paper
 
 ## ERROR HANDLING
-If a document is definitely not an exam paper, respond with:
+If a document is definitely not an exam paper , maybe any certificate/bills or any other personal document, respond with:
 {
   "error": true,
   "errorType": "INVALID_DOCUMENT",

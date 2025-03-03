@@ -1,9 +1,9 @@
-"use client"
-import { useState } from "react";
+"use client";
+import { useState, useEffect } from "react";
 import { toast } from "sonner";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { AlertTriangle, Loader2, Upload } from "lucide-react";
+import { AlertTriangle, FileWarning, Loader2, Upload } from "lucide-react";
 import FileUpload from "@/components/FileUpload";
 import QuestionCard from "@/components/QuestionCard";
 import { TextAnimation } from "@/components/ui/text-animation";
@@ -17,42 +17,83 @@ const placeholders = [
   "One night before the exam: 'Let me just take a 5-minute break'—*wakes up 6 hours later*."
 ];
 
-
 export default function Dashboard() {
   const [loading, setLoading] = useState(false);
   const [data, setData] = useState<ExamAnalysisResponse | null>(null);
+  const [error, setError] = useState<ExamAnalysisError | null>(null);
   const [isDisabled, setIsDisabled] = useState(false);
 
   const handleFilesUploaded = async (files: File[]) => {
     if (!files.length) return;
-    if(files.length <=1 ) setIsDisabled(true);
+    if (files.length <= 1) setIsDisabled(true);
 
     setLoading(true);
+    setError(null);
+    setData(null);
 
     const formdata = new FormData();
     for (let i = 0; i < files.length; i++) {
       formdata.append("files", files[i]);
     }
+    
     try {
       const response = await fetch("/api/generate", {
         method: "POST",
         body: formdata,
       });
 
-      if (response.ok) {
-        const responseData = await response.json();
+      const responseData = await response.json();
+      
+      if (response.ok && !responseData.error) {
         setData(responseData);
         toast("Files processed successfully!");
       } else {
-        const errorData = await response.json();
-        toast(errorData.error || "Failed to process files. Please try again.");
+        setError(responseData as ExamAnalysisError);
+        toast.error(responseData.message || "Failed to process files. Please try again.");
       }
     } catch (error) {
       console.error("Error processing files:", error);
-      toast("Failed to process files. Please try again.");
+      setError({
+        error: true,
+        errorType: "INVALID_DOCUMENT",
+        message: "Failed to process files. Please try again."
+      });
+      toast.error("Failed to process files. Please try again.");
     } finally {
       setLoading(false);
     }
+  };
+
+  const resetForm = () => {
+    setData(null);
+    setError(null);
+    setLoading(false);
+  };
+
+  const renderErrorMessage = () => {
+    const errorIcons = {
+      "INVALID_DOCUMENT": <FileWarning className="h-16 w-16 text-destructive mb-4" />,
+      "MIXED_SUBJECTS": <AlertTriangle className="h-16 w-16 text-amber-500 mb-4" />
+    };
+
+    const errorTitles = {
+      "INVALID_DOCUMENT": "Invalid Document Detected",
+      "MIXED_SUBJECTS": "Mixed Subjects Detected"
+    };
+
+    const errorType = error?.errorType || "INVALID_DOCUMENT";
+    
+    return (
+      <div className="flex flex-col items-center justify-center py-8 text-center">
+        {errorIcons[errorType]}
+        <h3 className="text-xl font-semibold mb-2">{errorTitles[errorType]}</h3>
+        <p className="text-muted-foreground mb-6 max-w-md">{error?.message}</p>
+        <Button onClick={resetForm} className="gap-2">
+          <Upload className="h-4 w-4" />
+          Upload Different Papers
+        </Button>
+      </div>
+    );
   };
 
   return (
@@ -70,7 +111,7 @@ export default function Dashboard() {
                 Upload your exam papers (PDF format) to analyze frequently asked questions and patterns.
               </p>
 
-              {!loading && !data && (
+              {!loading && !data && !error && (
                 <div className="relative">
                   <div className="py-8">
                     <FileUpload onFilesUploaded={handleFilesUploaded} />
@@ -79,11 +120,13 @@ export default function Dashboard() {
               )}
 
               {loading && (
-                <div className="flex items-center justify-center flex-col ">
+                <div className="flex items-center justify-center flex-col">
                   <Loader2 className="h-12 w-12 animate-spin text-primary mb-4" />
                   <TextAnimation texts={placeholders} />
                 </div>
               )}
+
+              {error && renderErrorMessage()}
             </div>
 
             {data && (
@@ -94,7 +137,7 @@ export default function Dashboard() {
                 </div>
 
                 <div className="flex flex-col md:flex-row justify-between items-center mb-6 gap-4">
-                <div className="order-2 md:order-1">
+                  <div className="order-2 md:order-1">
                     <h3 className="text-xl font-medium">{data.metadata.subject}</h3>
                     <p className="text-muted-foreground">
                       {data.metadata.paperCount} papers analyzed • {data.hot.questions.length + data.cool.questions.length + data.extras.questions.length} important questions found
@@ -102,18 +145,13 @@ export default function Dashboard() {
                   </div>
                   <Button
                     variant="outline"
-                    onClick={() => {
-                      setData(null);
-                      setLoading(false);
-                    }}
+                    onClick={resetForm}
                     className="gap-2 order-1 md:order-2"
-                    disabled={isDisabled}
                   >
                     <Upload className="h-4 w-4" />
                     Upload Different Papers
                   </Button>
                 </div>
-
 
                 {/* Hot Questions Section */}
                 {data.hot.questions.length > 0 && (
