@@ -183,6 +183,8 @@ PLEASE ANALYZE EACH AND EVERY QUESTIONS IN THE PDF AND CATEGORIZED THEM INTO:
 - "cool": Questions appearing frequently (eg. 2-3/5)
 - "extras": Questions appearing infrequently (eg. 1/5)
 
+
+
 ## SOLUTION GUIDELINES
 1. DIAGRAM QUESTIONS: Provide textual descriptions
 2. THEORY QUESTIONS: Double the points per mark (5 marks = 10 points)

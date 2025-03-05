@@ -10,6 +10,7 @@ export function parseResponseToJson(responseText: string) {
             cleanedText = cleanedText.substring(0, cleanedText.length - 3);
         }
         cleanedText = cleanedText.trim();
+        console.log("cleand text is", cleanedText)
         return JSON.parse(cleanedText);
     } catch (error) {
         console.error("Error parsing JSON response:", error);

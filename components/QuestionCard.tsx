@@ -1,10 +1,10 @@
-
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { ChevronDown, ChevronUp } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { MarkdownPreview } from "./RTE"; // Adjust path to your Markdown file
 
 interface Question {
   question: string;
@@ -20,9 +20,9 @@ interface QuestionCardProps {
 }
 
 export default function QuestionCard({ question, type, index }: QuestionCardProps) {
-  const [expanded, setExpanded] = useState(false);
+  const [expanded, setExpanded] = useState<boolean>(false);
 
-  const getCardClasses = () => {
+  const getCardClasses = (): string => {
     switch (type) {
       case "hot":
         return "border-l-4 border-l-destructive";
@@ -35,7 +35,7 @@ export default function QuestionCard({ question, type, index }: QuestionCardProp
     }
   };
 
-  const getFrequencyText = (frequency: string) => {
+  const getFrequencyText = (frequency: string): string => {
     switch (frequency) {
       case "1_OF_3_PAPERS":
         return "1 of 3 papers";
@@ -48,31 +48,55 @@ export default function QuestionCard({ question, type, index }: QuestionCardProp
     }
   };
 
-  const getAnimationDelay = () => {
+  const getAnimationDelay = (): string => {
     return `${index * 0.1}s`;
+  };
+
+  const preprocessMarkdown = (text: string): string => {
+    const lines = text.split('\n');
+    let output = '';
+    let inList = false;
+
+    lines.forEach((line) => {
+      if (!inList && !line.match(/^\d+\./)) {
+        output += line + '\n';
+      }
+      else if (line.match(/^\d+\./)) {
+        inList = true;
+        output += line + '\n';
+      }
+      else if (line.match(/^\s*\*\s/)) {
+        output += line.replace(/^\s*\*\s/, '  - ') + '\n';
+      }
+      else if (line.trim() && inList) {
+        output += '  ' + line + '\n'; 
+      }
+      else {
+        output += '\n';
+      }
+    });
+
+    return output.trim();
   };
 
   return (
     <Card
-      className={cn(
-        "animate-fade-in-up overflow-hidden",
-        getCardClasses()
-      )}
+      className={cn("animate-fade-in-up overflow-hidden", getCardClasses())}
       style={{ animationDelay: getAnimationDelay() }}
     >
-         <CardContent className="p-4">
+      <CardContent className="p-4">
         <div className="flex flex-col gap-3">
           <div className="flex items-start gap-2 justify-between">
             <div className="flex-1">
               <p className="font-medium">{question.question}</p>
               <div className="flex flex-wrap gap-2 mt-2">
-                {/* {question.marks && (
+                {question.marks !== null && (
                   <Badge variant="outline" className="bg-background/50">
                     {question.marks} marks
                   </Badge>
-                )} */}
-                <Badge 
-                  variant="outline" 
+                )}
+                <Badge
+                  variant="outline"
                   className={cn(
                     "bg-background/50",
                     type === "hot" && "border-destructive text-destructive",
@@ -84,7 +108,7 @@ export default function QuestionCard({ question, type, index }: QuestionCardProp
                 </Badge>
               </div>
             </div>
-            
+
             <Button
               variant="ghost"
               size="sm"
@@ -98,13 +122,14 @@ export default function QuestionCard({ question, type, index }: QuestionCardProp
               )}
             </Button>
           </div>
-          
+
           {expanded && (
-            <div className="mt-2 pt-3 border-t text-sm">
+            <div className="mt-2 pt-3 border-t">
               <h4 className="font-medium mb-1">Solution:</h4>
-              <div className="whitespace-pre-line text-muted-foreground">
-              {question.solution}
-              </div>
+              <MarkdownPreview
+                source={preprocessMarkdown(question.solution)}
+                className="prose prose-sm max-w-none text-muted-foreground"
+              />
             </div>
           )}
         </div>

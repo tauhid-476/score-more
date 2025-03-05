@@ -42,7 +42,7 @@ export async function POST(req: NextRequest) {
         console.log(result)
         const response = parseResponseToJson(result.response.text());
 
-        console.log(response);
+        console.log("response is",response);
 
         return NextResponse.json(response);
     } catch (error) {

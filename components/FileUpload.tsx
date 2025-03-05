@@ -13,17 +13,22 @@ export default function FileUpload({ onFilesUploaded, isLoading = false }: FileU
   const [isDragging, setIsDragging] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
+  if (files.length > 4) {
+    toast.error("Maximum 5 files are allowed")
+    return
+  }
+
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const selectedFiles = event.target.files;
     if (!selectedFiles) return;
 
     const fileList = Array.from(selectedFiles);
     const pdfFiles = fileList.filter(file => file.type === "application/pdf");
-    
+
     if (pdfFiles.length !== fileList.length) {
       toast.error("Only PDF files are allowed");
     }
-    
+
     setFiles(prevFiles => [...prevFiles, ...pdfFiles]);
   };
 
@@ -39,14 +44,14 @@ export default function FileUpload({ onFilesUploaded, isLoading = false }: FileU
   const handleDrop = (e: React.DragEvent<HTMLDivElement>) => {
     e.preventDefault();
     setIsDragging(false);
-    
+
     const droppedFiles = Array.from(e.dataTransfer.files);
     const pdfFiles = droppedFiles.filter(file => file.type === "application/pdf");
-    
+
     if (pdfFiles.length !== droppedFiles.length) {
       toast.error("Only PDF files are allowed");
     }
-    
+
     setFiles(prevFiles => [...prevFiles, ...pdfFiles]);
   };
 
@@ -59,16 +64,15 @@ export default function FileUpload({ onFilesUploaded, isLoading = false }: FileU
       toast.error("Please select at least one PDF file");
       return;
     }
-    
+
     onFilesUploaded(files);
   };
 
   return (
     <div className="w-full">
-      <div 
-        className={`border-2 border-dashed rounded-lg p-6 flex flex-col items-center justify-center mb-4 transition-colors ${
-          isDragging ? "border-primary bg-primary/5" : "border-border"
-        }`}
+      <div
+        className={`border-2 border-dashed rounded-lg p-6 flex flex-col items-center justify-center mb-4 transition-colors ${isDragging ? "border-primary bg-primary/5" : "border-border"
+          }`}
         onDragOver={handleDragOver}
         onDragLeave={handleDragLeave}
         onDrop={handleDrop}
@@ -79,8 +83,9 @@ export default function FileUpload({ onFilesUploaded, isLoading = false }: FileU
           <p className="text-sm text-muted-foreground mt-1">
             Drag and drop your PDF files or click to browse
           </p>
+          <p className="text-sm text-muted-foreground mt-1">&#40;Max 4 files&#41;</p>
         </div>
-        
+
         <Button
           variant="outline"
           onClick={() => fileInputRef.current?.click()}
@@ -90,7 +95,7 @@ export default function FileUpload({ onFilesUploaded, isLoading = false }: FileU
           <File className="h-4 w-4" />
           Browse Files
         </Button>
-        
+
         <input
           type="file"
           ref={fileInputRef}
@@ -98,16 +103,17 @@ export default function FileUpload({ onFilesUploaded, isLoading = false }: FileU
           className="hidden"
           accept=".pdf"
           multiple
+          max={4}
         />
       </div>
-      
+
       {files.length > 0 && (
         <div className="mt-4">
           <h4 className="text-sm font-medium mb-2">Selected Files ({files.length})</h4>
           <div className="space-y-2 max-h-40 overflow-y-auto p-1">
             {files.map((file, index) => (
-              <div 
-                key={index} 
+              <div
+                key={index}
                 className="flex items-center justify-between bg-muted/50 p-2 rounded"
               >
                 <div className="flex items-center gap-2 truncate">
@@ -129,10 +135,10 @@ export default function FileUpload({ onFilesUploaded, isLoading = false }: FileU
               </div>
             ))}
           </div>
-          
+
           <div className="mt-4 flex justify-end">
-            <Button 
-              onClick={handleSubmit} 
+            <Button
+              onClick={handleSubmit}
               className="gap-2"
               disabled={isLoading}
             >
