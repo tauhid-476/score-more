@@ -1,5 +1,5 @@
 
-import { AlertTriangle, Download, FileWarning, Loader2, Upload, XCircle } from "lucide-react";
+import { AlertTriangle, FileWarning, Upload, XCircle } from "lucide-react";
 import { Button } from "./ui/button";
 
 
