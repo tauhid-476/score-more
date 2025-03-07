@@ -99,9 +99,9 @@ export default function QuestionCard({ question, type, index }: QuestionCardProp
                   variant="outline"
                   className={cn(
                     "bg-background/50",
-                    type === "hot" && "border-destructive text-destructive",
-                    type === "cool" && "border-[#192cc2] text-[#192cc2]",
-                    type === "extra" && "border-muted-foreground text-muted-foreground"
+                    type === "hot" && "hot-badge",
+                    type === "cool" && "cool-badge",
+                    type === "extra" && "extra-badge"
                   )}
                 >
                   {getFrequencyText(question.frequency)}

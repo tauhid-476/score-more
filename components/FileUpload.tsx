@@ -14,7 +14,7 @@ export default function FileUpload({ onFilesUploaded, isLoading = false }: FileU
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   if (files.length > 4) {
-    toast.error("Maximum 5 files are allowed")
+    toast.error("Maximum 4 files are allowed")
     return
   }
 

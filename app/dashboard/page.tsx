@@ -3,13 +3,15 @@ import { useState } from "react";
 import { toast } from "sonner";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { AlertTriangle, FileWarning, Loader2, Upload } from "lucide-react";
+import { AlertTriangle, Download, FileWarning, Loader2, Upload } from "lucide-react";
 import FileUpload from "@/components/FileUpload";
 import QuestionCard from "@/components/QuestionCard";
 import { TextAnimation } from "@/components/ui/text-animation";
+import { generatePDF } from "@/lib/pdf-generator";
 
-const placeholders = [
+const loadingTexts = [
   "Let me cook",
+  "Better give me one minute rather than you spending hours",
   "Analyzing your exam papers more carefully than you did...",
   "Studying for exams? Or just speed-running the syllabus like it's a side quest?",
   "That moment when you flip the question paper and realize you studied the wrong subject.",
@@ -34,7 +36,7 @@ export default function Dashboard() {
     for (let i = 0; i < files.length; i++) {
       formdata.append("files", files[i]);
     }
-    
+
     try {
       const response = await fetch("/api/generate", {
         method: "POST",
@@ -42,7 +44,7 @@ export default function Dashboard() {
       });
 
       const responseData = await response.json();
-      
+
       if (response.ok && !responseData.error) {
         setData(responseData);
         toast("Files processed successfully!");
@@ -81,7 +83,6 @@ export default function Dashboard() {
     };
 
     const errorType = error?.errorType || "INVALID_DOCUMENT";
-    
     return (
       <div className="flex flex-col items-center justify-center py-8 text-center">
         {errorIcons[errorType]}
@@ -93,6 +94,25 @@ export default function Dashboard() {
         </Button>
       </div>
     );
+  };
+
+  const handleDownloadPDF = () => {
+    if (!data) {
+      toast.error("No data available to download");
+      return;
+    }
+    try {
+      generatePDF({
+        subject: data.metadata.subject,
+        hot: data.hot,
+        cool: data.cool,
+        extras: data.extras
+      });
+      toast.success("PDF downloaded successfully!");
+    } catch (error) {
+      console.error("Error generating PDF:", error);
+      toast.error("Failed to generate PDF. Please try again.");
+    }
   };
 
   return (
@@ -121,7 +141,7 @@ export default function Dashboard() {
               {loading && (
                 <div className="flex items-center justify-center flex-col">
                   <Loader2 className="h-12 w-12 animate-spin text-primary mb-4" />
-                  <TextAnimation texts={placeholders} />
+                  <TextAnimation texts={loadingTexts} />
                 </div>
               )}
 
@@ -211,6 +231,16 @@ export default function Dashboard() {
                     </div>
                   </div>
                 )}
+
+                <div className="mt-8 flex justify-center">
+                  <Button
+                    onClick={handleDownloadPDF}
+                    className="gap-2 bg-primary text-white px-6 shadow-lg shadow-primary/20"
+                  >
+                    <Download className="h-4 w-4" />
+                    Download All Questions and  as PDF
+                  </Button>
+                </div>
               </div>
             )}
           </CardContent>
