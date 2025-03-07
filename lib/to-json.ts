@@ -1,19 +1,20 @@
-export function parseResponseToJson(responseText: string) {
+export function convertToProperJson(input: string): ExamAnalysisResponse {
     try {
-        let cleanedText = responseText.trim();
-        if (cleanedText.startsWith("```json")) {
-            cleanedText = cleanedText.substring(7);
-        } else if (cleanedText.startsWith("```")) {
-            cleanedText = cleanedText.substring(3);
-        }
-        if (cleanedText.endsWith("```")) {
-            cleanedText = cleanedText.substring(0, cleanedText.length - 3);
-        }
-        cleanedText = cleanedText.trim();
-        console.log("cleand text is", cleanedText)
-        return JSON.parse(cleanedText);
+      let cleanedInput = input.trim();
+      if (cleanedInput.startsWith('"') && cleanedInput.endsWith('"')) {
+        cleanedInput = cleanedInput.slice(1, -1);
+      }
+      
+      cleanedInput = cleanedInput.replace(/```json\n/g, '');
+      cleanedInput = cleanedInput.replace(/```/g, '');
+      
+      cleanedInput = cleanedInput.replace(/\\\\n/g, '\\n');
+      
+      const parsedData: ExamAnalysisResponse = JSON.parse(cleanedInput);
+      
+      return parsedData;
     } catch (error) {
-        console.error("Error parsing JSON response:", error);
-        throw new Error("Failed to parse model response as JSON");
+      console.error('Error parsing JSON:', error);
+      throw new Error(`Failed to parse JSON: ${error}`);
     }
-}
+  }

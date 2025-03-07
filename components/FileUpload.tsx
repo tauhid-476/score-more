@@ -89,7 +89,7 @@ export default function FileUpload({ onFilesUploaded, isLoading = false }: FileU
         <Button
           variant="outline"
           onClick={() => fileInputRef.current?.click()}
-          className="gap-2"
+          className="gap-2 cursor-pointer"
           disabled={isLoading}
         >
           <File className="h-4 w-4" />
@@ -139,7 +139,7 @@ export default function FileUpload({ onFilesUploaded, isLoading = false }: FileU
           <div className="mt-4 flex justify-end">
             <Button
               onClick={handleSubmit}
-              className="gap-2"
+              className="gap-2 cursor-pointer"
               disabled={isLoading}
             >
               {isLoading ? "Processing..." : "Process Files"}

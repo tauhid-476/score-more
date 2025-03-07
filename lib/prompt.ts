@@ -197,8 +197,7 @@ PLEASE ANALYZE EACH AND EVERY QUESTIONS IN THE PDF AND CATEGORIZED THEM INTO:
   "metadata": {
     "subject": "SUBJECT_NAME",
     "paperCount": ${fileCount},
-    "totalQuestions": TOTAL_QUESTIONS,
-    "examYear": "YEAR_IF_AVAILABLE"
+    "totalQuestions": TOTAL_QUESTIONS
   },
   "hot": {
     "questions": [

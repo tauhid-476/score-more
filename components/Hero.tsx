@@ -5,7 +5,7 @@ import Link from "next/link";
 
 export default function Hero() {
   return (
-    <div className="min-h-screen pt-24 pb-16 flex items-center">
+    <div id="features" className="min-h-screen pt-24 pb-16 flex items-center">
       <div className="container-custom grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
         <div className="space-y-8 animate-fade-in-up" style={{ animationDelay: "0.2s" }}>
           <div className="space-y-2">

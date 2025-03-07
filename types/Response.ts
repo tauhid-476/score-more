@@ -16,7 +16,6 @@ interface ExamQuestion {
       subject: string;
       paperCount: number;
       totalQuestions: number;
-      examYear: string | null;
     };
     hot: QuestionCategory;
     cool: QuestionCategory;
@@ -24,8 +23,8 @@ interface ExamQuestion {
   }
   
   interface ExamAnalysisError {
-    error: true;
-    errorType: "INVALID_DOCUMENT" | "MIXED_SUBJECTS";
+    error: boolean;
+    errorType: "INVALID_DOCUMENT" | "MIXED_SUBJECTS" | "API_FETCH_FAILED" | "UNKNOWN_ERROR";
     message: string;
   }
   

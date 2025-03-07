@@ -3,7 +3,7 @@ import { useState } from "react";
 import { toast } from "sonner";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { AlertTriangle, Download, FileWarning, Loader2, Upload } from "lucide-react";
+import { AlertTriangle, Download, FileWarning, Loader2, Upload, XCircle } from "lucide-react";
 import FileUpload from "@/components/FileUpload";
 import QuestionCard from "@/components/QuestionCard";
 import { TextAnimation } from "@/components/ui/text-animation";
@@ -74,15 +74,19 @@ export default function Dashboard() {
   const renderErrorMessage = () => {
     const errorIcons = {
       "INVALID_DOCUMENT": <FileWarning className="h-16 w-16 text-destructive mb-4" />,
-      "MIXED_SUBJECTS": <AlertTriangle className="h-16 w-16 text-amber-500 mb-4" />
+      "MIXED_SUBJECTS": <AlertTriangle className="h-16 w-16 text-amber-500 mb-4" />,
+      "API_FETCH_FAILED": <XCircle className="h-16 w-16 text-red-600 mb-4" />,
+      "UNKNOWN_ERROR": <XCircle className="h-16 w-16 text-red-600 mb-4" />
     };
 
     const errorTitles = {
       "INVALID_DOCUMENT": "Invalid Document Detected",
-      "MIXED_SUBJECTS": "Mixed Subjects Detected"
+      "MIXED_SUBJECTS": "Mixed Subjects Detected",
+      "API_FETCH_FAILED": "Looks like there was an error processing your files. Please try again.",
+      "UNKNOWN_ERROR": "An unknown error occurred. Please try again."
     };
 
-    const errorType = error?.errorType || "INVALID_DOCUMENT";
+    const errorType = error?.errorType || "UNKNOWN_ERROR";
     return (
       <div className="flex flex-col items-center justify-center py-8 text-center">
         {errorIcons[errorType]}

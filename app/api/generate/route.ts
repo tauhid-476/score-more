@@ -1,6 +1,6 @@
 
 import { generateExamAnalysisPrompt } from "@/lib/prompt";
-import { parseResponseToJson } from "@/lib/to-json";
+import { convertToProperJson } from "@/lib/to-json";
 import { GoogleGenerativeAI } from "@google/generative-ai";
 import { NextRequest, NextResponse } from "next/server";
 
@@ -38,13 +38,15 @@ export async function POST(req: NextRequest) {
 
         const dynamicPrompt = generateExamAnalysisPrompt(files.length);
         contentParts.push(dynamicPrompt);
+
         const result = await model.generateContent(contentParts);
         console.log(result)
-        const response = parseResponseToJson(result.response.text());
 
+        const response = convertToProperJson(result.response.text());
         console.log("response is",response);
 
         return NextResponse.json(response);
+        
     } catch (error) {
         console.log(error);
         return NextResponse.json({
