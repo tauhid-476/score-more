@@ -3,11 +3,12 @@ import { useState } from "react";
 import { toast } from "sonner";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { AlertTriangle, Download, FileWarning, Loader2, Upload, XCircle } from "lucide-react";
+import { AlertTriangle, Download, Loader2, Upload } from "lucide-react";
 import FileUpload from "@/components/FileUpload";
-import QuestionCard from "@/components/QuestionCard";
 import { TextAnimation } from "@/components/ui/text-animation";
 import { generatePDF } from "@/lib/pdf-generator";
+import { renderErrorMessage } from "@/components/ErrorMessage";
+import QuesCardSec from "@/components/QuesCardSec";
 
 const loadingTexts = [
   "Let me cook",
@@ -56,8 +57,8 @@ export default function Dashboard() {
       console.error("Error processing files:", error);
       setError({
         error: true,
-        errorType: "INVALID_DOCUMENT",
-        message: "Failed to process files. Please try again."
+        errorType: "API_FETCH_FAILED",
+        message: "There was an error processing your files. Please try again."
       });
       toast.error("Failed to process files. Please try again.");
     } finally {
@@ -69,35 +70,6 @@ export default function Dashboard() {
     setData(null);
     setError(null);
     setLoading(false);
-  };
-
-  const renderErrorMessage = () => {
-    const errorIcons = {
-      "INVALID_DOCUMENT": <FileWarning className="h-16 w-16 text-destructive mb-4" />,
-      "MIXED_SUBJECTS": <AlertTriangle className="h-16 w-16 text-amber-500 mb-4" />,
-      "API_FETCH_FAILED": <XCircle className="h-16 w-16 text-red-600 mb-4" />,
-      "UNKNOWN_ERROR": <XCircle className="h-16 w-16 text-red-600 mb-4" />
-    };
-
-    const errorTitles = {
-      "INVALID_DOCUMENT": "Invalid Document Detected",
-      "MIXED_SUBJECTS": "Mixed Subjects Detected",
-      "API_FETCH_FAILED": "Looks like there was an error processing your files. Please try again.",
-      "UNKNOWN_ERROR": "An unknown error occurred. Please try again."
-    };
-
-    const errorType = error?.errorType || "UNKNOWN_ERROR";
-    return (
-      <div className="flex flex-col items-center justify-center py-8 text-center">
-        {errorIcons[errorType]}
-        <h3 className="text-xl font-semibold mb-2">{errorTitles[errorType]}</h3>
-        <p className="text-muted-foreground mb-6 max-w-md">{error?.message}</p>
-        <Button onClick={resetForm} className="gap-2">
-          <Upload className="h-4 w-4" />
-          Upload Different Papers
-        </Button>
-      </div>
-    );
   };
 
   const handleDownloadPDF = () => {
@@ -149,7 +121,7 @@ export default function Dashboard() {
                 </div>
               )}
 
-              {error && renderErrorMessage()}
+              {error && renderErrorMessage({error, resetForm})}
             </div>
 
             {data && (
@@ -176,65 +148,8 @@ export default function Dashboard() {
                   </Button>
                 </div>
 
-                {/* Hot Questions Section */}
-                {data.hot.questions.length > 0 && (
-                  <div className="mb-10">
-                    <h2 className="text-xl font-bold mb-4 flex items-center">
-                      <span className="inline-block w-3 h-3 rounded-full bg-destructive mr-2"></span>
-                      🔥 Hot Topics ({data.hot.questions.length})
-                    </h2>
-                    <div className="grid grid-cols-1 gap-4">
-                      {data.hot.questions.map((question, index) => (
-                        <QuestionCard
-                          key={index}
-                          question={question}
-                          type="hot"
-                          index={index}
-                        />
-                      ))}
-                    </div>
-                  </div>
-                )}
-
-                {/* Cool Questions Section */}
-                {data.cool.questions.length > 0 && (
-                  <div className="mb-10">
-                    <h2 className="text-xl font-bold mb-4 flex items-center">
-                      <span className="inline-block w-3 h-3 rounded-full bg-[#192cc2] mr-2"></span>
-                      ❄️ Cool Topics ({data.cool.questions.length})
-                    </h2>
-                    <div className="grid grid-cols-1 gap-4">
-                      {data.cool.questions.map((question, index) => (
-                        <QuestionCard
-                          key={index}
-                          question={question}
-                          type="cool"
-                          index={index}
-                        />
-                      ))}
-                    </div>
-                  </div>
-                )}
-
-                {/* Extras Questions Section */}
-                {data.extras.questions.length > 0 && (
-                  <div>
-                    <h2 className="text-xl font-bold mb-4 flex items-center">
-                      <span className="inline-block w-3 h-3 rounded-full bg-[#b6de3f] mr-2"></span>
-                      ⭐ Extra Topics ({data.extras.questions.length})
-                    </h2>
-                    <div className="grid grid-cols-1 gap-4">
-                      {data.extras.questions.map((question, index) => (
-                        <QuestionCard
-                          key={index}
-                          question={question}
-                          type="extra"
-                          index={index}
-                        />
-                      ))}
-                    </div>
-                  </div>
-                )}
+                {/* Questions Section */}
+               <QuesCardSec data={data} />
 
                 <div className="mt-8 flex justify-center">
                   <Button
